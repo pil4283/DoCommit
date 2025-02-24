@@ -1,45 +1,34 @@
 package com.pil.docommit
 
 import android.os.Bundle
-import android.util.Log
+import android.widget.TextView
+import androidx.activity.viewModels
+
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.lifecycleScope
-import com.pil.docommit.ui.theme.DoCommitTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import androidx.lifecycle.Observer
+import com.pil.docommit.viewmodel.CommitViewModel
 
 class MainActivity : ComponentActivity() {
-    private val repository = GitHubRepository()
+
+    private val viewModel: CommitViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val commitStatusTextView = findViewById<TextView>(R.id.commitStatusTextView)
         enableEdgeToEdge()
+        viewModel.commitStatus.observe(this, Observer{status -> commitStatusTextView.text = status})
+
         // Todo : activity에서 입력부분 추가
-        checkTodayCommitsForAllRepos("pil4283")
-/*        setContent {
-            DoCommitTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }*/
+        viewModel.fetchCommitStatus("pil4283")
     }
 
-    private fun checkTodayCommitsForAllRepos(username: String){
+/*    private fun checkTodayCommitsForAllRepos(username: String){
         lifecycleScope.launch(Dispatchers.IO){
+            val commitStatus = "오늘 커밋 안함"
+
             try {
                 val commits = repository.getTodayCommitsForAllRepos(username)
                 if(commits.isNotEmpty()){
@@ -56,23 +45,8 @@ class MainActivity : ComponentActivity() {
             }catch(e: Exception){
                 Log.e("DoCommit", "error: ${e.message}")
             }
+
+
         }
-    }
+    }*/
 }
-
-/*
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DoCommitTheme {
-        Greeting("Android")
-    }
-}*/
