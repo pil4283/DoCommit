@@ -1,7 +1,13 @@
 package com.pil.docommit
 
+import android.health.connect.datatypes.units.Length
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 
 import androidx.activity.ComponentActivity
@@ -21,8 +27,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         viewModel.commitStatus.observe(this, Observer{status -> commitStatusTextView.text = status})
 
-        // Todo : activity에서 입력부분 추가
-        viewModel.fetchCommitStatus("pil4283")
+        val gitEditText = findViewById<EditText>(R.id.githubIdEditText)
+        val gitID = gitEditText.text
+        val setAlramButton = findViewById<Button>(R.id.setAlramButton)
+
+        setAlramButton.setOnClickListener{
+            viewModel.fetchCommitStatus(gitID.toString())
+            Toast.makeText(this, gitID,Toast.LENGTH_LONG).show()
+        }
     }
 
 /*    private fun checkTodayCommitsForAllRepos(username: String){

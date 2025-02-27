@@ -93,7 +93,7 @@ if __name__ == "__main__":
         # 내 모든 리포 가져오기
         repositories = get_all_repoositories(username)
         if not repositories:
-            print("리포지토리가 빔")
+            print(" 빔")
         else:
             committed_today = False
 
